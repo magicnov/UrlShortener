@@ -1,4 +1,4 @@
-name: CI
+name: .NET
 
 on:
   push:
@@ -27,4 +27,10 @@ jobs:
     - name: Test
       run: dotnet test --no-restore --verbosity normal
     - name: Publish
-      run: dotnet publish UrlShortener.csproj -c Release -r linux-x64 --no-self-contained
+      run: dotnet publish UrlShortener.csproj -c Release -r linux-x64 --no-self-contained -o UrlShortener
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: UrlShortener
+        path: UrlShortener/**
+        if-no-files-found: error
