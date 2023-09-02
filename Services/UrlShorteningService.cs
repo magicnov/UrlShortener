@@ -23,7 +23,7 @@ public class UrlShorteningService
         {
             for (var i = 0; i < NumberOfCharsInShortLink; i++)
             {
-                var randomIndex = _random.Next(Alphabet.Length - 1);
+                var randomIndex = _random.Next(Alphabet.Length);
 
                 codeChars[i] = Alphabet[randomIndex];
             }
