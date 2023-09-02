@@ -5,7 +5,7 @@ namespace UrlShortener.Services;
 public class UrlShorteningService
 {
     public const int NumberOfCharsInShortLink = 7;
-    private const string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    public const string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     
     private readonly Random _random = new();
     private readonly ApplicationDbContext _dbContext;

@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
 using UrlShortener;
 using UrlShortener.Entities;
@@ -53,6 +54,12 @@ app.MapPost("api/shorten", async (
 
 app.MapGet("api/{code}", async (string code, ApplicationDbContext dbContext) =>
 {
+    const string invalidCharsPattern = $"[^{UrlShorteningService.Alphabet}]";
+    if (code.Length != UrlShorteningService.NumberOfCharsInShortLink || Regex.IsMatch(code, invalidCharsPattern))
+    {
+        return Results.BadRequest("The specified code is invalid.");
+    }
+
     var shortenedUrl = await dbContext.ShortenedUrls
         .FirstOrDefaultAsync(s => s.Code == code);
 
