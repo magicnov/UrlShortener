@@ -27,18 +27,29 @@ jobs:
     - name: Test
       run: dotnet test --no-restore --verbosity normal
     - name: Publish
-      run: dotnet publish UrlShortener.csproj -c Release -r linux-x64 --no-self-contained -o UrlShortener
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: UrlShortener
-        path: UrlShortener/**
-        if-no-files-found: error
-    - name: Executing remote command
+      run: dotnet publish UrlShortener.csproj -c Release -r linux-x64 --no-self-contained -o publish
+    - name: Stop app service
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.HOST }}
         USERNAME: ${{ secrets.USERNAME }}
         PORT: ${{ secrets.PORT }}
         KEY: ${{ secrets.SSHKEY }}
-        script: ls
+        script: systemctl stop urlshortener.service
+    - name: Copy files to server
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        port: ${{ secrets.PORT }}
+        key: ${{ secrets.SSHKEY }}
+        source: UrlShortener/publish/
+        target: /var/www/urlshortener
+    - name: Start app service
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        USERNAME: ${{ secrets.USERNAME }}
+        PORT: ${{ secrets.PORT }}
+        KEY: ${{ secrets.SSHKEY }}
+        script: systemctl start urlshortener.service
