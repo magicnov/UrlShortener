@@ -30,8 +30,8 @@ app.MapPost("api/shorten", async (
 {
     if (!Uri.TryCreate(request.Url, UriKind.Absolute, out _))
     {
-        return Results.BadRequest($"The specified URL is invalid.");
-    }
+        return Results.BadRequest("The specified URL is invalid.");
+    
 
     var code = await urlShorteningService.GenerateUniqueCodeAsync();
 
