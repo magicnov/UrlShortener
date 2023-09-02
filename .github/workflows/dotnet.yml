@@ -43,8 +43,10 @@ jobs:
         username: ${{ secrets.USERNAME }}
         port: ${{ secrets.PORT }}
         key: ${{ secrets.SSHKEY }}
-        source: publish/*
+        source: publish/
         target: /var/www/urlshortener
+        strip_components: 1
+        rm: true
     - name: Start app service
       uses: appleboy/ssh-action@master
       with:
