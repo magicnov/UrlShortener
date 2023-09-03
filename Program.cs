@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using UrlShortener;
 using UrlShortener.Entities;
@@ -39,6 +40,7 @@ app.MapPost("api/shorten", async (
     var shortenedUrl = new ShortenedUrl
     {
         Id = Guid.NewGuid(),
+        IpAddress = httpContext.Connection.RemoteIpAddress?.ToString() ?? string.Empty,
         LongUrl = request.Url,
         Code = code,
         ShortUrl = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}/api/{code}",
@@ -71,6 +73,17 @@ app.MapGet("api/{code}", async (string code, ApplicationDbContext dbContext) =>
     return Results.Redirect(shortenedUrl.LongUrl);
 });
 
-app.UseHttpsRedirection();
+if (app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
+
+if (app.Environment.IsProduction())
+{
+    app.UseForwardedHeaders(new ForwardedHeadersOptions
+    {
+        ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+    });
+}
 
 app.Run();

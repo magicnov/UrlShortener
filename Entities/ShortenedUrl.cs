@@ -3,6 +3,8 @@ namespace UrlShortener.Entities;
 public class ShortenedUrl
 {
     public Guid Id { get; set; }
+
+    public string IpAddress { get; set; } = string.Empty;
     
     public string LongUrl { get; set; } = string.Empty;
 

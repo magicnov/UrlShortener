@@ -17,6 +17,8 @@ public class ApplicationDbContext : DbContext
     {
         modelBuilder.Entity<ShortenedUrl>(builder =>
         {
+            builder.Property(s => s.IpAddress).HasMaxLength(20);
+            
             builder.Property(s => s.Code).HasMaxLength(UrlShorteningService.NumberOfCharsInShortLink);
             
             builder.HasIndex(s => s.Code).IsUnique();
