@@ -28,6 +28,12 @@ jobs:
       run: dotnet test --no-restore --verbosity normal
     - name: Publish
       run: dotnet publish UrlShortener.csproj -c Release -r linux-x64 --no-self-contained -o publish
+    - name: App settings variable substitution
+      uses: microsoft/variable-substitution@v1
+      with:
+        files: 'publish/appsettings.json'
+      env:
+        ConnectionStrings.Database: ${{ secrets.CONNECTION_STRING }}
     - name: Stop app service
       uses: appleboy/ssh-action@master
       with:
